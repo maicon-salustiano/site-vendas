@@ -43,6 +43,12 @@ const produtos = [
 ];
 
 let produtoSelecionado = null;
+let quantidadeCarrinho = 0;
+
+function atualizarContadorCarrinho() {
+    const contador = document.getElementById('cart-total');
+    if (contador) contador.textContent = quantidadeCarrinho;
+}
 
 // Renderização dos cards no catálogo
 function carregarProdutos() {
@@ -153,6 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function abrirCheckout(id) {
     produtoSelecionado = produtos.find(p => p.id === id);
     if (!produtoSelecionado) return;
+
+    quantidadeCarrinho += 1;
+    atualizarContadorCarrinho();
 
     document.getElementById('modal-product-name').innerText = produtoSelecionado.titulo;
     document.getElementById('modal-product-price').innerText = produtoSelecionado.precoPix;
