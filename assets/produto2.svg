@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-label="Internet VPN 1 mês">
+  <rect width="600" height="900" fill="#0b1220"/>
+  <rect x="70" y="70" width="460" height="760" fill="#132132" stroke="#2f6cf6" stroke-width="4"/>
+  <circle cx="300" cy="330" r="110" fill="#2f6cf6" opacity="0.25"/>
+  <path d="M300 230 L420 330 L300 430 L180 330 Z" fill="#6ea8ff"/>
+  <path d="M300 430 L420 330 L420 520 L300 620 L180 520 L180 330 Z" fill="#2f6cf6" opacity="0.9"/>
+  <text x="300" y="710" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">VPN 1 MÊS</text>
+</svg>

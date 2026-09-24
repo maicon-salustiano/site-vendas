@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-label="Produto Digital 5">
+  <rect width="600" height="900" fill="#120d1b"/>
+  <rect x="150" y="170" width="300" height="560" rx="26" fill="#2b1d3a"/>
+  <circle cx="300" cy="350" r="90" fill="#a78bfa" opacity="0.8"/>
+  <rect x="210" y="480" width="180" height="26" rx="13" fill="#ddd6fe"/>
+  <rect x="170" y="535" width="260" height="26" rx="13" fill="#c4b5fd"/>
+  <rect x="210" y="590" width="180" height="26" rx="13" fill="#8b5cf6"/>
+  <text x="300" y="760" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700">Produto 5</text>
+</svg>

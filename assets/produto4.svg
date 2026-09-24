@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-label="Produto Digital 4">
+  <rect width="600" height="900" fill="#0f172a"/>
+  <rect x="100" y="180" width="400" height="520" rx="30" fill="#1e293b"/>
+  <path d="M200 600 L300 260 L400 600 Z" fill="#f59e0b" opacity="0.9"/>
+  <circle cx="300" cy="340" r="88" fill="#fbbf24" opacity="0.25"/>
+  <text x="300" y="755" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700">Produto 4</text>
+</svg>
