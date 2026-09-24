@@ -332,10 +332,19 @@ body {
     pointer-events: none;
 }
 
+.product-card img.product-image-contain {
+    object-fit: contain;
+    background: #11131a;
+    transform: translateY(2px);
+}
+
 .product-card h3 {
-    font-size: 1rem;
+    color: #ffffff;
+    font-size: 1.1rem;
+    line-height: 1.3;
     margin-bottom: 10px;
     min-height: 48px;
+    overflow-wrap: anywhere;
 }
 
 .price-original {
@@ -408,6 +417,50 @@ body {
     position: relative;
 }
 
+.cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.cart-item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.cart-remove {
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.cart-empty {
+    color: var(--text-muted);
+    padding: 18px 0;
+}
+
+.cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.15rem;
+    margin-bottom: 18px;
+}
+
+.cart-total-row strong {
+    color: #fff;
+}
+
 .modal-close {
     position: absolute;
     top: 15px;
@@ -427,6 +480,7 @@ body {
 .modal-subtitle {
     color: var(--text-muted);
     font-size: 0.9rem;
+    overflow-wrap: anywhere;
 }
 
 .modal-price {

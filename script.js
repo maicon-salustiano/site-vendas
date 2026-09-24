@@ -2,7 +2,7 @@
 const produtos = [
     {
         id: 1,
-        titulo: "NETFLIX 1 MÊS",
+        titulo: "Netflix 1 mês",
         precoOriginal: "R$ 44,90",
         desconto: "-10% OFF",
         precoPix: "R$ 15,00",
@@ -10,7 +10,7 @@ const produtos = [
     },
     {
         id: 2,
-        titulo: "INTERNET VPN 1 MÊS",
+        titulo: "VPN 1 mês",
         precoOriginal: "R$ 35,00",
         desconto: "-20% OFF",
         precoPix: "R$ 10,00",
@@ -44,10 +44,70 @@ const produtos = [
 
 let produtoSelecionado = null;
 let quantidadeCarrinho = 0;
+const produtosNoCarrinho = new Set();
 
 function atualizarContadorCarrinho() {
     const contador = document.getElementById('cart-total');
     if (contador) contador.textContent = quantidadeCarrinho;
+}
+
+function adicionarAoCarrinho(produtoId) {
+    if (produtosNoCarrinho.has(produtoId)) return;
+    produtosNoCarrinho.add(produtoId);
+    quantidadeCarrinho += 1;
+    atualizarContadorCarrinho();
+}
+
+function obterProdutosDoCarrinho() {
+    return produtos.filter(produto => produtosNoCarrinho.has(produto.id));
+}
+
+function valorDoProduto(preco) {
+    return Number(preco.replace('R$ ', '').replace('.', '').replace(',', '.'));
+}
+
+function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function atualizarCarrinho() {
+    const lista = document.getElementById('cart-items');
+    const total = document.getElementById('cart-price');
+    const finalizar = document.getElementById('btn-finalizar-carrinho');
+    if (!lista || !total || !finalizar) return;
+
+    const produtosCarrinho = obterProdutosDoCarrinho();
+    lista.innerHTML = produtosCarrinho.length
+        ? produtosCarrinho.map(produto => `
+            <li class="cart-item">
+                <span>${produto.titulo}</span>
+                <strong>${produto.precoPix}</strong>
+                <button type="button" class="cart-remove" data-produto-id="${produto.id}" aria-label="Remover ${produto.titulo}">&times;</button>
+            </li>
+        `).join('')
+        : '<li class="cart-empty">Seu carrinho está vazio.</li>';
+
+    const valorTotal = produtosCarrinho.reduce((totalAtual, produto) => totalAtual + valorDoProduto(produto.precoPix), 0);
+    total.textContent = formatarPreco(valorTotal);
+    finalizar.disabled = produtosCarrinho.length === 0;
+
+    lista.querySelectorAll('.cart-remove').forEach(botao => {
+        botao.addEventListener('click', () => {
+            produtosNoCarrinho.delete(Number(botao.dataset.produtoId));
+            quantidadeCarrinho = produtosNoCarrinho.size;
+            atualizarContadorCarrinho();
+            atualizarCarrinho();
+        });
+    });
+}
+
+function abrirCarrinho() {
+    atualizarCarrinho();
+    document.getElementById('cart-modal').style.display = 'flex';
+}
+
+function fecharCarrinho() {
+    document.getElementById('cart-modal').style.display = 'none';
 }
 
 // Renderização dos cards no catálogo
@@ -61,7 +121,7 @@ function carregarProdutos() {
         card.classList.add('product-card');
         
         card.innerHTML = `
-            <img src="${produto.imagem}" alt="${produto.titulo}" loading="lazy">
+            <img class="${produto.id === 1 ? 'product-image-contain' : ''}" src="${produto.imagem}" alt="${produto.titulo}" loading="lazy">
             <div class="card-body">
                 <h3>${produto.titulo}</h3>
                 <div>
@@ -73,6 +133,10 @@ function carregarProdutos() {
             </div>
         `;
         
+        card.addEventListener('click', (event) => {
+            if (event.target.closest('button')) return;
+            adicionarAoCarrinho(produto.id);
+        });
         container.appendChild(card);
     });
 }
@@ -133,6 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const checkoutModal = document.getElementById('checkout-modal');
+    const cartModal = document.getElementById('cart-modal');
+    document.querySelector('.carrinho-btn')?.addEventListener('click', abrirCarrinho);
+    document.getElementById('btn-fechar-carrinho')?.addEventListener('click', fecharCarrinho);
+    cartModal?.addEventListener('click', (event) => {
+        if (event.target === cartModal) fecharCarrinho();
+    });
+    document.getElementById('btn-finalizar-carrinho')?.addEventListener('click', () => {
+        const produtosCarrinho = obterProdutosDoCarrinho();
+        if (!produtosCarrinho.length) return;
+        produtoSelecionado = produtosCarrinho[0];
+        document.getElementById('modal-product-name').innerText = produtosCarrinho.map(produto => produto.titulo).join(' + ');
+        document.getElementById('modal-product-price').innerText = formatarPreco(produtosCarrinho.reduce((total, produto) => total + valorDoProduto(produto.precoPix), 0));
+        fecharCarrinho();
+        document.getElementById('checkout-step-1').style.display = 'block';
+        document.getElementById('checkout-step-2').style.display = 'none';
+        checkoutModal.style.display = 'flex';
+    });
     document.getElementById('btn-fechar-checkout')?.addEventListener('click', fecharCheckout);
     checkoutModal?.addEventListener('click', (event) => {
         if (event.target === checkoutModal) fecharCheckout();
@@ -159,9 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function abrirCheckout(id) {
     produtoSelecionado = produtos.find(p => p.id === id);
     if (!produtoSelecionado) return;
-
-    quantidadeCarrinho += 1;
-    atualizarContadorCarrinho();
 
     document.getElementById('modal-product-name').innerText = produtoSelecionado.titulo;
     document.getElementById('modal-product-price').innerText = produtoSelecionado.precoPix;
@@ -192,6 +270,7 @@ async function processarPagamento(event) {
     // ENVIAR APENAS O ID DO PRODUTO (NUNCA O PREÇO)
     const dadosCliente = {
         produto_id: produtoSelecionado.id,
+        produto_ids: obterProdutosDoCarrinho().map(produto => produto.id),
         nome: document.getElementById('client-name').value.trim(),
         email: document.getElementById('client-email').value.trim(),
         cpf: cpfLimpo
